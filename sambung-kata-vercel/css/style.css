@@ -183,8 +183,8 @@ body {
 .rgroup-empty { color: var(--text-3); font-size: 13px; font-family: var(--mono); padding: 8px 0; }
 .rgroup-more { margin-top: 10px; text-align: center; color: var(--text-3); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; }
 
-.wgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 7px; align-items: stretch; }
-.wgrid-full { grid-template-columns: 1fr; }
+.wgrid { display: flex; flex-wrap: wrap; gap: 7px; align-items: stretch; }
+.wgrid-full { display: grid; grid-template-columns: 1fr; }
 .wcard {
   position: relative;
   display: block;
@@ -194,15 +194,18 @@ body {
   color: var(--text); font-family: var(--mono); font-size: 13px; font-weight: 600;
   text-align: left; transition: transform .1s, border-color .12s, background .12s;
   min-height: 48px;
+  flex: 0 0 auto;
+  min-width: 120px;
+  width: max-content;
 }
 .wcard:hover { transform: translateY(-2px); }
 /* allow long words to wrap fully instead of being cut off */
 .wcard-word {
   display: block;
-  word-break: break-all; overflow-wrap: break-word;
+  white-space: nowrap;
+  word-break: keep-all;
   text-transform: lowercase;
   line-height: 1.35;
-  min-width: 0;
 }
 .wcard-badge {
   position: absolute;
@@ -265,7 +268,7 @@ body {
   .toolbar { flex-direction: column; align-items: stretch; }
   .status-control { width: 100%; justify-content: center; }
   .grid2 { grid-template-columns: 1fr; }
-  .wgrid { grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); }
+  .wgrid { display: flex; flex-wrap: wrap; gap: 7px; }
 }
 
 /* ===== v-full-feature additions ===== */

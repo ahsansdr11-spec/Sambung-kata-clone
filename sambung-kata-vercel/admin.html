@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Sambung Kata</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-wrap { max-width: 920px; margin: 0 auto; padding: 18px; }
+    .login-box { max-width: 360px; margin: 12vh auto; }
+    .a-field { margin-bottom: 12px; }
+    .a-field label { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--text-3); margin-bottom:6px; text-transform:uppercase; }
+    .a-input { width:100%; padding:12px 14px; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--mono); font-size:15px; outline:none; }
+    .a-input:focus { border-color:var(--emerald); }
+    .a-btn { width:100%; padding:12px; background:var(--emerald); color:#04130d; border:none; border-radius:var(--radius-sm); font-weight:800; font-family:var(--mono); cursor:pointer; letter-spacing:.05em; }
+    .a-btn:hover { opacity:.92; }
+    .a-btn.sm { width:auto; padding:7px 12px; font-size:12px; }
+    .a-btn.ghost { background:var(--bg-3); color:var(--text-2); border:1px solid var(--border); }
+    .a-btn.danger { background:var(--rose); color:#fff; }
+    .a-err { color:var(--rose); font-size:13px; font-family:var(--mono); margin-top:8px; min-height:18px; }
+    .tabbar { display:flex; gap:8px; margin:18px 0; flex-wrap:wrap; }
+    .tab { padding:8px 16px; border-radius:999px; border:1px solid var(--border); background:var(--bg-3); color:var(--text-2); cursor:pointer; font-family:var(--mono); font-size:13px; }
+    .tab.active { background:var(--emerald-d); border-color:var(--emerald); color:var(--emerald); }
+    .row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
+    .row .a-field { flex:1; min-width:140px; margin-bottom:0; }
+    .item { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-3); margin-bottom:6px; font-family:var(--mono); font-size:13px; }
+    .item .badge { font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); }
+    .badge.v { color:var(--emerald); border-color:var(--emerald); }
+    .badge.u { color:var(--text-3); }
+    .muted { color:var(--text-3); font-family:var(--mono); font-size:12px; }
+    .section-card { background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:16px; }
+    .checkbox-row { display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:13px; color:var(--text-2); }
+    .topnav { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginView" class="admin-wrap">
+  <div class="section-card login-box">
+    <div style="text-align:center;margin-bottom:18px">
+      <div class="brand-logo" style="margin:0 auto 10px">SK</div>
+      <div style="font-family:var(--mono);font-weight:800;letter-spacing:.1em">ADMIN PANEL</div>
+      <div class="muted">Authorized personnel only</div>
+    </div>
+    <div class="a-field"><label>Username</label><input id="luser" class="a-input" autocomplete="username"></div>
+    <div class="a-field"><label>Password</label><input id="lpass" class="a-input" type="password" autocomplete="current-password"></div>
+    <button id="loginBtn" class="a-btn">LOGIN</button>
+    <div id="loginErr" class="a-err"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashView" class="admin-wrap hidden">
+  <div class="topnav">
+    <div>
+      <span style="font-family:var(--mono);font-weight:800;letter-spacing:.1em">ADMIN PANEL</span>
+      <span class="muted" id="whoami"></span>
+    </div>
+    <button id="logoutBtn" class="a-btn ghost sm">Logout</button>
+  </div>
+
+  <div class="today-stats" style="margin:14px 0">
+    <div class="today-card today-v"><span class="today-num" id="adminTodayVerified">0</span><span class="today-lab">Verified today</span></div>
+    <div class="today-card today-r"><span class="today-num" id="adminTodayRejected">0</span><span class="today-lab">Rejected today</span></div>
+    <div class="today-card today-a"><span class="today-num" id="adminTodayAdded">0</span><span class="today-lab">Added today</span></div>
+  </div>
+
+  <div class="tabbar">
+    <button class="tab active" data-tab="add">➕ Tambah Kata</button>
+    <button class="tab" data-tab="manage">📋 Kelola</button>
+    <button class="tab" data-tab="tactical">⚡ Tactical</button>
+    <button class="tab" data-tab="account">🔑 Akun</button>
+    <button class="tab" data-tab="users" id="usersTab">👤 Users</button>
+  </div>
+
+  <!-- ADD -->
+  <div id="tab-add" class="tabpane">
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">TAMBAH KATA</div>
+      <div class="row">
+        <div class="a-field"><label>Kata (a-z)</label><input id="addWord" class="a-input" placeholder="contoh: cendrawasih"></div>
+        <label class="checkbox-row"><input type="checkbox" id="addVerified"> Verified</label>
+        <button id="addBtn" class="a-btn sm">Tambah</button>
+      </div>
+      <div class="a-err" id="addMsg"></div>
+    </div>
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">REJECT KATA</div>
+      <p class="muted" style="margin-bottom:10px">Sembunyikan kata dari hasil publik (kata tidak valid di game).</p>
+      <div class="row">
+        <div class="a-field"><label>Kata di-reject</label><input id="rejWord" class="a-input" placeholder="kata yang mau disembunyikan"></div>
+        <button id="rejBtn" class="a-btn sm danger">Reject</button>
+      </div>
+      <div class="a-err" id="rejMsg"></div>
+    </div>
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">UBAH STATUS VERIFIKASI</div>
+      <div class="row">
+        <div class="a-field"><label>Kata</label><input id="verWord" class="a-input"></div>
+        <label class="checkbox-row"><input type="checkbox" id="verVal"> Verified</label>
+        <button id="verBtn" class="a-btn sm">Set Status</button>
+      </div>
+      <div class="a-err" id="verMsg"></div>
+    </div>
+  </div>
+
+  <!-- MANAGE -->
+  <div id="tab-manage" class="tabpane hidden">
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">KATA TAMBAHAN</div>
+      <div id="addedList"></div>
+    </div>
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">KATA DI-REJECT</div>
+      <div id="rejectedList"></div>
+    </div>
+  </div>
+
+  <!-- TACTICAL -->
+  <div id="tab-tactical" class="tabpane hidden">
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">TACTICAL SUFFIXES (TRAP MODE)</div>
+      <p class="muted" style="margin-bottom:10px">Suffix jebakan yang dipakai untuk grouping di Trap Mode.</p>
+      <div class="row">
+        <div class="a-field"><label>Suffix (a-z)</label><input id="tacWord" class="a-input" placeholder="contoh: oa"></div>
+        <div class="a-field" style="max-width:90px"><label>Tier</label><input id="tacTier" class="a-input" type="number" value="1" min="1"></div>
+        <button id="tacBtn" class="a-btn sm">Tambah</button>
+      </div>
+      <div class="a-err" id="tacMsg"></div>
+      <div id="tacList" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div id="tab-account" class="tabpane hidden">
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">GANTI PASSWORD</div>
+      <div class="a-field"><label>Current Key</label><input id="cpCur" class="a-input" type="password" placeholder="Current password"></div>
+      <div class="a-field"><label>New Access Key</label><input id="cpNew" class="a-input" type="password" placeholder="New password (min 6 chars)"></div>
+      <div class="a-field"><label>Confirm New Key</label><input id="cpConf" class="a-input" type="password" placeholder="Confirm new password"></div>
+      <button id="cpBtn" class="a-btn">Ganti Password</button>
+      <div class="a-err" id="cpMsg"></div>
+    </div>
+  </div>
+
+  <!-- USERS -->
+  <div id="tab-users" class="tabpane hidden">
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">BUAT USER BARU</div>
+      <div class="row">
+        <div class="a-field"><label>Username</label><input id="nuUser" class="a-input"></div>
+        <div class="a-field"><label>Password</label><input id="nuPass" class="a-input" type="text" placeholder="min 6 char"></div>
+        <label class="checkbox-row"><input type="checkbox" id="nuSuper"> Superadmin</label>
+        <button id="nuBtn" class="a-btn sm">Buat</button>
+      </div>
+      <div class="a-err" id="nuMsg"></div>
+    </div>
+    <div class="section-card">
+      <div class="panel-title" style="margin-bottom:12px">DAFTAR USER</div>
+      <div id="usersList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="js/admin.js"></script>
+</body>
+</html>
