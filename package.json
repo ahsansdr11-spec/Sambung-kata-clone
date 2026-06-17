@@ -1,0 +1,10 @@
+{
+  "name": "sambung-kata",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sambung Kata — Word Cheat Sheet with admin panel",
+  "type": "module",
+  "dependencies": {
+    "pg": "^8.13.1"
+  }
+}
