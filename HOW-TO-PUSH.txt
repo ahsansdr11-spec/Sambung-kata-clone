@@ -1,0 +1,60 @@
+=== TINGGAL PUSH DOANG (sambung-kata-vercel.zip) ===
+
+APA YANG DIPERBAIKI/DITAMBAH DI UPDATE INI:
+- FIX CRITICAL: js/app.js sebelumnya ada syntax error (?.onclick = ...) yang
+  bikin SELURUH script utama gagal jalan -> login gate, search, magic
+  suffixes, semua toggle, semuanya MATI TOTAL. Sekarang sudah diperbaiki.
+- Tambah: Contribution requests (basic user) -> /api/contribute +
+  /api/admin/contributions (sebelumnya dipanggil tapi file-nya belum ada).
+- Tambah: My Stats -> /api/admin/my-stats (sebelumnya dipanggil tapi belum ada).
+- Fix: Subscription "Batal Permanen" (unset_permanent) sebelumnya error
+  karena backend belum support action itu. Extend sekarang juga bisa
+  value+unit (hari/bulan/tahun/dekade), bukan cuma +30 hari hardcoded.
+- Tambah: Bulk Import kata (tab baru di admin panel).
+- Tambah: CSV Export (tombol baru di tab Kelola admin panel).
+- Tambah: Activity Log viewer (tab baru di admin panel).
+- Semua fitur lama (announcements, anti-copy, anti-right-click, tactical,
+  tabs lain) TETAP ada, tidak ada yang dihapus.
+
+=== LANGKAH DI TERMUX ===
+
+1) Masuk ke folder repo kamu:
+   cd ~/nama-repo-kamu
+
+2) WAJIB backup + hapus file lama dulu (jangan skip ini):
+   cp -r . ../backup-$(date +%Y%m%d%H%M) 2>/dev/null || true
+   rm -rf api assets css data js lib admin.html index.html vercel.json package.json .gitignore *.md *.txt 2>/dev/null || true
+
+3) Unzip file BARU ini (sambung-kata-vercel.zip) di folder yang sama:
+   unzip -o /sdcard/Download/sambung-kata-vercel.zip
+
+4) Push (cuma 3 perintah git, gak ribet):
+   git add .
+   git commit -m "Fix critical app.js bug + contributions + my-stats + bulk import + csv export + activity log"
+   git push
+
+=== LANGKAH DI VERCEL (WAJIB, JANGAN SKIP) ===
+
+5) Buka vercel.com -> project kamu -> tab "Deployments"
+6) Klik deployment paling atas -> klik tombol "Redeploy"
+   (Push doang KE GITHUB TIDAK CUKUP kalau auto-deploy kamu mati / butuh
+   konfirmasi manual — pastikan klik Redeploy biar build terbaru jalan)
+7) Tunggu sampai status "Ready"
+
+=== HARD REFRESH DI BROWSER ===
+
+8) Buka web kamu, tekan Ctrl + Shift + R (hard refresh, biar gak kena cache lama)
+
+=== CARA TEST HASILNYA ===
+
+- Login -> harus tetap bisa masuk seperti biasa (ini yang paling penting,
+  sebelumnya ini yang rusak total karena bug syntax)
+- Search kata -> ketik prefix, hasil muncul, toggle Fast/All/Trap/Brutal/Full/
+  Sort/Random semua harus jalan
+- Klik kata di hasil -> TIDAK bisa di-select / di-copy / klik kanan
+- Coba klik kanan di halaman -> menu klik kanan harus blocked
+- Coba tekan F12 / Ctrl+Shift+I -> harus blocked
+- Kalau ada announcement aktif dari admin -> muncul di atas halaman utama
+- Buka /admin -> cek semua tab: Tambah, Kelola (+ tombol Export CSV),
+  Bulk Import, My Stats, Contributions, Subscription (extend + Batal
+  Permanen), Announcements, Tactical, Activity Log -> semua harus berfungsi

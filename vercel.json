@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" }
+  ],
+  "functions": {
+    "api/admin/export-csv.js": {
+      "includeFiles": "data/**"
+    }
+  }
+}
